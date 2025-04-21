@@ -1,5 +1,5 @@
 # python-bibtex-linter
-A Python tool to parse BibTeX entries and a set of self-defined invariants (constraints) on them.
+A Python tool to parse BibTeX entries and run custom invariant (constraint) checks on them.
 
 > [!warning]
 > This tool is a **Work in Progress**.
