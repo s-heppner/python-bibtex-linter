@@ -24,7 +24,7 @@ def _check_omitted_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     omitted_fields_present = fields & existing_fields
 
     if omitted_fields_present:
-        return [f"Entry '{entry.name}' has fields present that would are omitted in the compiled document: "
+        return [f"Entry '{entry.name}' has fields present that would be omitted in the compiled document: "
                 f"[{', '.join(sorted(omitted_fields_present))}]. This could lead to a loss of information."]
     return []
 
