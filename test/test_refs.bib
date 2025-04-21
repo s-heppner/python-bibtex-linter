@@ -1,0 +1,89 @@
+@article{basic_case,
+  author = {Tests basic article},
+  title = {Standard field format},
+  year = {2020}
+}
+
+@inproceedings{alias_case,
+  author = {Should map to CONFERENCE},
+  title = {Using alias INPROCEEDINGS},
+  year = {2021}
+}
+
+@electronic{online_case,
+  author = {Should map to ONLINE},
+  url = {https://example.com}
+}
+
+@techreport{tech_report_alias,
+  author = {Should map to TECH_REPORT},
+  title = {Tech report via alias}
+}
+
+@book{extra_whitespace,
+  author    =    {Extra spaces around field and value}  ,
+  title=   {   Trimmed Title   },
+  year= {2023}
+}
+
+@misc{nested_braces,
+  note = {{This has nested braces inside}},
+  comment = {But only outermost braces should be stripped}
+}
+
+@misc{double_braces,
+  author = {{Double brace test}},
+  title = {{Another level of nesting}}
+}
+
+@misc{quote_wrapped,
+  author = "Quoted Author",
+  title = "Simple quoted title"
+}
+
+@misc{multiline_field,
+  note = {This value
+          spans multiple
+          lines}
+}
+
+@misc{url_wrapped,
+  howpublished = {\url{https://wrapped-url.com}}
+}
+
+@misc{command_wrapped,
+  title = {\LaTeX command in value}
+}
+
+@misc{trailing_comma,
+  author = {Trailing Comma},
+  title = {Should be OK},
+}
+
+@misc{no_trailing_comma,
+  author = {No Trailing Comma}
+}
+
+@misc{
+  newlines_everywhere,
+  author = {Newlines and spacing
+  everywhere},
+  title = {Still valid}
+}
+
+@standard{standard_type,
+  author = {Tests EntryType.STANDARD},
+  title = {Formal standard ref}
+}
+
+@inbook{inbook_type,
+  author = {Part of a book},
+  title = {Chapter Title},
+  booktitle = {Whole Book Title}
+}
+
+@incollection{incollection_type,
+  author = {Self-contained part of a collection},
+  title = {In Collection Title},
+  booktitle = {Collection Name}
+}

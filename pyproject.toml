@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+# Configure setuptools_scm for version management:
+# - Automatically infers the version number from the most recent git tag
+# - Generates a version.py file in the package directory
+# - Allows for automatic versioning between releases (e.g., 1.0.1.dev4+g12345)
+# If you want to use the version anywhere in the code, use
+# ```
+# from sync_dir.version import version
+# print(f"Project version: {version}")
+# ```
+version_file = "bibtex_linter/version.py"
+
+[project]
+name = "bibtex_linter"
+dynamic = ["version"]
+description = "A Python tool to parse bibtex entries and analyze them for errors."
+authors = [
+    {name = "Sebastian Heppner", email = "mail@s-heppner.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+testing = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "test"
+]
+
+[project.scripts]
+bibtex_linter = "bibtex_linter.main:main"
