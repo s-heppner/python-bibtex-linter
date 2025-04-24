@@ -21,7 +21,7 @@ version_file = "bibtex_linter/version.py"
 [project]
 name = "bibtex_linter"
 dynamic = ["version"]
-description = "A Python tool to parse bibtex entries and analyze them for errors."
+description = "A Python tool to parse BibTeX entries and run (custom) checks on them."
 authors = [
     {name = "Sebastian Heppner", email = "mail@s-heppner.com"}
 ]

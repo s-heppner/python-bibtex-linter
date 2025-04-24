@@ -1,49 +1,64 @@
 """
 This module implements verification of constraints or invariants.
 
-When using the decorators, they automatically load the method below them into the `_constraint_functions` list at time
+When using the decorators, they automatically load the method below them into the `_rules` list at time
 of import.
-
-To use this, you can define your own rules:
-
-```Python
-from bibtex_linter.verification import invariant, invariant_for
-from bibtex_linter.parser import BibTeXEntry, EntryType
-
-@invariant(EntryType.ONLINE)
-def online_must_have_url(entry: BibTeXEntry) -> List[str]:
-    if "url" in entry.fields:
-        return []
-    return ["ONLINE entries must include a URL"]
-```
-
-As you can see, the parameter should always be the entry to check, the output should always be a `List[str]`, where
-each string is descriptive explanation of a found issue. If no issues are found, the check should return an empty list.
 """
-from typing import Callable, Tuple, List, Optional
+from typing import Callable, Tuple, List, Optional, Set
 
 from bibtex_linter.parser import BibTeXEntry, EntryType
 
-_invariants: List[Callable] = []
+# The dynamic list of known rules.
+# This list gets updated when a method with the `@linter_rule` decorator gets imported.
+_rules: List[Callable] = []
 
-def invariant(entry_type: Optional[EntryType] = None) -> Callable:
+def linter_rule(entry_type: Optional[EntryType] = None) -> Callable:
     """
-    Decorator to mark a constraint for a specific entry type.
+    Decorator to mark a method defines rules to be checked by the linter for a specific entry type.
 
     If `entry_type` is `None`, we assume it is valid for all types.
     """
     def wrapper(func: Callable[[BibTeXEntry], List[Tuple[bool, str]]]) -> Callable:
         setattr(func, "_is_invariant", True)
         setattr(func, "_entry_type", entry_type)
-        _invariants.append(func)
+        _rules.append(func)
         return func
     return wrapper
 
 
+def check_required_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
+    """
+    Helper function to check the existence of a set of required fields for the given entry.
+    """
+    existing_fields: Set[str] = set(entry.fields.keys())
+    if not fields.issubset(entry.fields):
+        missing = fields - existing_fields
+        return [f"Entry '{entry.name}' misses the following required fields: [{', '.join(sorted(missing))}]"]
+    return []
+
+
+def check_omitted_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
+    """
+    Helper function to check the existence of a set of omitted fields for the given entry.
+    """
+    existing_fields: Set[str] = set(entry.fields.keys())
+    omitted_fields_present = fields & existing_fields
+
+    if omitted_fields_present:
+        return [f"Entry '{entry.name}' has fields present that would be omitted in the compiled document: "
+                f"[{', '.join(sorted(omitted_fields_present))}]. This could lead to a loss of information."]
+    return []
+
+
 def verify(entry: BibTeXEntry) -> List[str]:
+    """
+    Call this function to execute all imported methods that have the `invariant` decorator.
+
+    Warning: This is basically remote code execution, so be sure to know what methods are imported!
+    """
     errors = []
 
-    for check in _invariants:
+    for check in _rules:
         entry_type = getattr(check, "_entry_type", None)
         if entry_type is None or entry_type == entry.entry_type:
             errors.extend(check(entry))
