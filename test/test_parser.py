@@ -1,8 +1,12 @@
 import unittest
+import os
+from typing import Dict, List
+
 from bibtex_linter.parser import EntryType, BibTeXEntry, split_entries, parse_bibtex_file
 
+
 class TestBibTeXEntry(unittest.TestCase):
-    def test_parse_field_value(self):
+    def test_parse_field_value(self) -> None:
         test_cases = [
             ("{John Doe}", "John Doe"),
             ("{{John Doe}}", "John Doe"),
@@ -31,7 +35,7 @@ class TestBibTeXEntry(unittest.TestCase):
                 result = BibTeXEntry._parse_field_value(raw_value)
                 self.assertEqual(expected, result)
 
-    def test_split_fields_basic(self):
+    def test_split_fields_basic(self) -> None:
         entry = """@article{doe2020,
   author = {John Doe},
   title = {A Study},
@@ -45,7 +49,7 @@ class TestBibTeXEntry(unittest.TestCase):
         result = BibTeXEntry._split_fields(entry)
         self.assertEqual(expected, result)
 
-    def test_split_fields_with_trailing_comma_and_newline(self):
+    def test_split_fields_with_trailing_comma_and_newline(self) -> None:
         entry = """@book{smith2021,
   author = {Jane Smith},
   title = {The Book of Testing},
@@ -59,7 +63,7 @@ class TestBibTeXEntry(unittest.TestCase):
         result = BibTeXEntry._split_fields(entry)
         self.assertEqual(expected, result)
 
-    def test_split_fields_multiline_values(self):
+    def test_split_fields_multiline_values(self) -> None:
         entry = """@misc{nested2022,
   author = {{Industrial Digital Twin Association e. V.}},
   url = {https://example.com},
@@ -74,12 +78,11 @@ class TestBibTeXEntry(unittest.TestCase):
         result = BibTeXEntry._split_fields(entry)
         self.assertEqual(expected, result)
 
-    def test_split_fields_with_extra_whitespace(self):
-        entry = """@misc{id123,  
-    author    =    {Someone}  , 
-    title=   {  Extra Spaces   }   , 
-    year= {2023}    
-}"""
+    def test_split_fields_with_extra_whitespace(self) -> None:
+        entry = ("@misc{id123,  \n    "
+                 "author    =    {Someone}  , \n    "
+                 "title=   {  Extra Spaces   }   , \n    "
+                 "year= {2023}    }")
         expected = [
             "    author    =    {Someone}  ",
             "    title=   {  Extra Spaces   }   ",
@@ -88,7 +91,7 @@ class TestBibTeXEntry(unittest.TestCase):
         result = BibTeXEntry._split_fields(entry)
         self.assertEqual(expected, result)
 
-    def test_split_fields_with_linebreak_after_entry_type(self):
+    def test_split_fields_with_linebreak_after_entry_type(self) -> None:
         entry = """@misc
 {
 id456,
@@ -102,14 +105,14 @@ id456,
         result = BibTeXEntry._split_fields(entry)
         self.assertEqual(expected, result)
 
-    def test_split_fields_missing_open_brace(self):
+    def test_split_fields_missing_open_brace(self) -> None:
         entry = "article, author = {John Doe}, title = {Oops}"
         with self.assertRaises(KeyError):
             BibTeXEntry._split_fields(entry)
 
 
 class TestSplitEntries(unittest.TestCase):
-    def test_single_entry(self):
+    def test_single_entry(self) -> None:
         raw = """@article{key1,
   author = {John Doe},
   title = {Example},
@@ -119,7 +122,7 @@ class TestSplitEntries(unittest.TestCase):
         self.assertEqual(1, len(entries))
         self.assertIn("key1", entries[0])
 
-    def test_multiple_entries(self):
+    def test_multiple_entries(self) -> None:
         raw = """@article{key1,
   author = {John Doe},
   title = {Example 1},
@@ -136,7 +139,7 @@ class TestSplitEntries(unittest.TestCase):
         self.assertIn("key1", entries[0])
         self.assertIn("key2", entries[1])
 
-    def test_entry_with_nested_braces(self):
+    def test_entry_with_nested_braces(self) -> None:
         raw = """@misc{key3,
   note = {Something with {nested} braces}
 }"""
@@ -144,7 +147,7 @@ class TestSplitEntries(unittest.TestCase):
         self.assertEqual(1, len(entries))
         self.assertIn("nested", entries[0])
 
-    def test_entry_with_line_breaks(self):
+    def test_entry_with_line_breaks(self) -> None:
         raw = """@online{key4,
   author = {Someone},
   title = {Line
@@ -155,7 +158,7 @@ Break},
         self.assertEqual(1, len(entries))
         self.assertIn("Line\nBreak", entries[0])
 
-    def test_incomplete_entry(self):
+    def test_incomplete_entry(self) -> None:
         raw = """@article{key5,
   title = {Missing closing brace}
 """
@@ -164,8 +167,9 @@ Break},
 
 
 class TestParseBibtexFile(unittest.TestCase):
-    def test_parse_all_entries(self):
-        entries = parse_bibtex_file("./test_refs.bib")
+    def test_parse_all_entries(self) -> None:
+        bib_path = os.path.join(os.path.dirname(__file__), "test_refs.bib")
+        entries = parse_bibtex_file(bib_path)
         self.assertEqual(17, len(entries))
 
         expected_types = {
@@ -185,8 +189,8 @@ class TestParseBibtexFile(unittest.TestCase):
                 actual_count = sum(1 for e in entries if e.entry_type == entry_type)
                 self.assertEqual(expected_count, actual_count)
 
-    def test_entry_fields_and_values(self):
-        expected_entries = [
+    def test_entry_fields_and_values(self) -> None:
+        expected_entries: List[Dict[str, EntryType | Dict[str, str]]] = [
             {
                 "type": EntryType.ARTICLE,
                 "fields": {
@@ -309,12 +313,16 @@ class TestParseBibtexFile(unittest.TestCase):
             },
         ]
 
-        parsed_entries = parse_bibtex_file("./test_refs.bib")
+        bib_path = os.path.join(os.path.dirname(__file__), "test_refs.bib")
+        parsed_entries = parse_bibtex_file(bib_path)
 
         for expected in expected_entries:
             with self.subTest(expected=expected["fields"]):
+                # (2025-04-24, s-heppner)
+                # We can safely ignore the mypy warning here, since we wrote the `expected_entries` this way just above.
+                expected_fields: Dict[str, str] = expected["fields"]  # type: ignore
                 match = next(
-                    (e for e in parsed_entries if all(e.fields.get(k) == v for k, v in expected["fields"].items())),
+                    (e for e in parsed_entries if all(e.fields.get(k) == v for k, v in expected_fields.items())),
                     None
                 )
                 all_field_sets = [e.fields for e in parsed_entries]
@@ -323,7 +331,10 @@ class TestParseBibtexFile(unittest.TestCase):
                     f"Missing or incorrect entry for:\nExpected Fields: {expected['fields']}\n"
                     f"Parsed Entries:\n{all_field_sets}"
                 )
-                self.assertEqual(expected["type"], match.entry_type)
+                # (2025-04-24, s-heppner)
+                # We can safely ignore the mypy warning here, since we already asserted that `match` is not `None` in
+                # the line above.
+                self.assertEqual(expected["type"], match.entry_type)  # type: ignore
 
 
 if __name__ == "__main__":

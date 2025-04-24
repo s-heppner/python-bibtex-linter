@@ -7,7 +7,7 @@ from bibtex_linter.verification import verify
 from bibtex_linter.parser import BibTeXEntry, parse_bibtex_file
 
 
-def import_from_path(file_path: str):
+def import_from_path(file_path: str) -> None:
     """
     Import a given module using its path.
     """
@@ -17,13 +17,14 @@ def import_from_path(file_path: str):
     # It seems a bit cursed, but I guess as long as it works and really only used on known and safe `rules.py`...
     module_name: str = "ruleset"
     spec = importlib.util.spec_from_file_location(module_name, file_path)
+    if not spec or not spec.loader:
+        raise ImportError(f"Could not import ruleset from '{file_path}'.")
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
     spec.loader.exec_module(module)
-    return module
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Verify a .bib file using a set of defined rules.")
     parser.add_argument("filepath", type=str, help="Path to the .bib file to verify")
     parser.add_argument("ruleset",
@@ -64,6 +65,7 @@ def main():
         sys.exit(0)  # Exit as success
 
     sys.exit(1)  # Exit as failure
+
 
 if __name__ == "__main__":
     main()

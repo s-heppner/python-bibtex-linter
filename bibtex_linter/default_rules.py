@@ -87,7 +87,7 @@ def check_online(entry: BibTeXEntry) -> List[str]:
         "address",
         "url",
     }
-    if not "note" in entry.fields.keys():
+    if "note" not in entry.fields.keys():
         invariant_violations.append(f"Entry '{entry.name}' is of type 'online' and needs a field 'note' with the URL.")
         # Todo: In the future, we could actually check that it contains an URL
     invariant_violations.extend(check_required_fields(entry, required_fields))
@@ -145,7 +145,7 @@ def check_in_book(entry: BibTeXEntry) -> List[str]:
         "number",
         "url",
     }
-    if not "chapter" in entry.fields.keys() or not "pages" in entry.fields.keys():
+    if "chapter" not in entry.fields.keys() or "pages" not in entry.fields.keys():
         invariant_violations.append(f"Entry {entry.name} needs to contain one of the "
                                     f"following fields: [chapter, pages].")
     invariant_violations.extend(check_required_fields(entry, required_fields))
