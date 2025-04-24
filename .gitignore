@@ -178,3 +178,6 @@ cython_debug/
 test/test_template/*.tex
 test/test_template/*.pdf
 test/test_template/*.cls
+
+# Ignore the version.py file
+bibtex_linter/version.py
