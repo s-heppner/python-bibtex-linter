@@ -4,21 +4,26 @@ This module implements verification of constraints or invariants.
 When using the decorators, they automatically load the method below them into the `_rules` list at time
 of import.
 """
-from typing import Callable, Tuple, List, Optional, Set
+from typing import Callable, TypeVar, List, Optional, Set
 
 from bibtex_linter.parser import BibTeXEntry, EntryType
 
 # The dynamic list of known rules.
 # This list gets updated when a method with the `@linter_rule` decorator gets imported.
-_rules: List[Callable] = []
+_rules: List[Callable[[BibTeXEntry], List[str]]] = []
 
-def linter_rule(entry_type: Optional[EntryType] = None) -> Callable:
+# For the type annotations, we define a `LINTER_RULE_TYPE` variable, which describes the type of the methods that
+# define the linter rules.
+LINTER_RULE_TYPE = TypeVar("LINTER_RULE_TYPE", bound=Callable[[BibTeXEntry], List[str]])
+
+
+def linter_rule(entry_type: Optional[EntryType] = None) -> Callable[[LINTER_RULE_TYPE], LINTER_RULE_TYPE]:
     """
     Decorator to mark a method defines rules to be checked by the linter for a specific entry type.
 
     If `entry_type` is `None`, we assume it is valid for all types.
     """
-    def wrapper(func: Callable[[BibTeXEntry], List[Tuple[bool, str]]]) -> Callable:
+    def wrapper(func: LINTER_RULE_TYPE) -> LINTER_RULE_TYPE:
         setattr(func, "_is_invariant", True)
         setattr(func, "_entry_type", entry_type)
         _rules.append(func)

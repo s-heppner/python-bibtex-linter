@@ -129,7 +129,6 @@ class BibTeXEntry:
 
         return raw_fields
 
-
     @staticmethod
     def _parse_field_value(raw_value: str) -> str:
         """
@@ -199,9 +198,3 @@ def parse_bibtex_file(filename: str) -> List[BibTeXEntry]:
         for raw_entry_string in raw_entries:
             entries.append(BibTeXEntry.from_string(raw_entry_string))
     return entries
-
-
-if __name__ == '__main__':
-    e = parse_bibtex_file("../test/test_refs.bib")
-    for i in e:
-        print(i)
