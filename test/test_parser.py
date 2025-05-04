@@ -110,6 +110,53 @@ id456,
         with self.assertRaises(KeyError):
             BibTeXEntry._split_fields(entry)
 
+    def test_field_with_equals_in_value(self) -> None:
+        bibtex_string = """@misc{test_entry,
+          note = {This URL has equals: https://example.com/?id=123&lang=en},
+        }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("note")
+        expected = "This URL has equals: https://example.com/?id=123&lang=en"
+        self.assertEqual(expected, actual)
+
+    def test_double_braces(self) -> None:
+        bibtex_string = """@misc{test_entry,
+          title = {{Title with {{extra}} braces}},
+        }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("title")
+        expected = "Title with {{extra}} braces"
+        self.assertEqual(expected, actual)
+
+    def test_quoted_field(self) -> None:
+        bibtex_string = """@misc{test_entry,
+          author = "Jane Doe",
+        }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("author")
+        expected = "Jane Doe"
+        self.assertEqual(expected, actual)
+
+    def test_multiline_field(self) -> None:
+        bibtex_string = """@misc{test_entry,
+          note = {This is a
+                  multi-line
+                  note.},
+        }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("note")
+        expected = "This is a\n                  multi-line\n                  note."
+        self.assertEqual(expected, actual)
+
+    def test_field_with_url_and_brackets(self) -> None:
+        bibtex_string = """@misc{test_entry,
+          howpublished = {\\url{https://example.org/query?x=1&y=2}},
+        }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("howpublished")
+        expected = "\\url{https://example.org/query?x=1&y=2}"
+        self.assertEqual(expected, actual)
+
 
 class TestSplitEntries(unittest.TestCase):
     def test_single_entry(self) -> None:
