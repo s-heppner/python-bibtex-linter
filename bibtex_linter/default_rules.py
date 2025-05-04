@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from bibtex_linter.parser import BibTeXEntry, EntryType
+from bibtex_linter.parser import BibTeXEntry
 from bibtex_linter.verification import (
     linter_rule,
     check_required_fields,
@@ -8,7 +8,7 @@ from bibtex_linter.verification import (
 )
 
 
-@linter_rule(entry_type=EntryType.ARTICLE)
+@linter_rule(entry_type="article")
 def check_article(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.ARTICLE` are there and that there are no fields present, that would
@@ -34,7 +34,7 @@ def check_article(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.CONFERENCE)
+@linter_rule(entry_type="conference")
 def check_conference(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.CONFERENCE` are there and that there are no fields present, that would
@@ -64,7 +64,7 @@ def check_conference(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.ONLINE)
+@linter_rule(entry_type="online")
 def check_online(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.ONLINE` are there and that there are no fields present, that would
@@ -95,7 +95,7 @@ def check_online(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.BOOK)
+@linter_rule(entry_type="book")
 def check_book(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.BOOK` are there and that there are no fields present, that would
@@ -123,7 +123,7 @@ def check_book(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.IN_BOOK)
+@linter_rule(entry_type="inbook")
 def check_in_book(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.IN_BOOK` are there and that there are no fields present, that would
@@ -153,7 +153,7 @@ def check_in_book(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.IN_COLLECTION)
+@linter_rule(entry_type="incollection")
 def check_in_collection(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.IN_COLLECTION` are there and that there are no fields present, that
@@ -180,7 +180,7 @@ def check_in_collection(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.STANDARD)
+@linter_rule(entry_type="standard")
 def check_standard(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.STANDARD` are there and that there are no fields present, that would
@@ -212,7 +212,7 @@ def check_standard(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.TECH_REPORT)
+@linter_rule(entry_type="techreport")
 def check_tech_report(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.TECH_REPORT` are there and that there are no fields present, that
@@ -242,7 +242,7 @@ def check_tech_report(entry: BibTeXEntry) -> List[str]:
     return invariant_violations
 
 
-@linter_rule(entry_type=EntryType.MISC)
+@linter_rule(entry_type="misc")
 def check_misc(entry: BibTeXEntry) -> List[str]:
     """
     Check that the required fields for `EntryType.MISC` are there and that there are no fields present, that would

@@ -6,7 +6,7 @@ of import.
 """
 from typing import Callable, TypeVar, List, Optional, Set
 
-from bibtex_linter.parser import BibTeXEntry, EntryType
+from bibtex_linter.parser import BibTeXEntry
 
 # The dynamic list of known rules.
 # This list gets updated when a method with the `@linter_rule` decorator gets imported.
@@ -17,7 +17,7 @@ _rules: List[Callable[[BibTeXEntry], List[str]]] = []
 LINTER_RULE_TYPE = TypeVar("LINTER_RULE_TYPE", bound=Callable[[BibTeXEntry], List[str]])
 
 
-def linter_rule(entry_type: Optional[EntryType] = None) -> Callable[[LINTER_RULE_TYPE], LINTER_RULE_TYPE]:
+def linter_rule(entry_type: Optional[str] = None) -> Callable[[LINTER_RULE_TYPE], LINTER_RULE_TYPE]:
     """
     Decorator to mark a method defines rules to be checked by the linter for a specific entry type.
 
