@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import dataclasses
 import enum
 import re
@@ -85,10 +85,7 @@ class BibTeXEntry:
         raw_fields = cls._split_fields(entry_string)
         fields: Dict[str, str] = {}
         for raw_field in raw_fields:
-            raw_key, raw_value = raw_field.split("=")
-            # Clean up key and value
-            key = raw_key.strip(" ").lower()
-            value = cls._parse_field_value(raw_value)
+            key, value = cls._split_field_into_key_and_value(raw_field)
             fields[key] = value
 
         return BibTeXEntry(
@@ -156,6 +153,19 @@ class BibTeXEntry:
             return raw_value[1:-1].strip()
 
         return raw_value
+
+    @staticmethod
+    def _split_field_into_key_and_value(raw_field: str) -> Tuple[str, str]:
+        """
+        Splits a field, such as `author = {{John Doe}},` into the field's key and value and cleans up both.
+
+        :param raw_field:
+        :return:
+        """
+        parts = raw_field.split("=", 1)
+        key = parts[0].strip().lower()
+        value = parts[1].strip() if len(parts) > 1 else ""
+        return key, BibTeXEntry._parse_field_value(value)
 
 
 def split_entries(raw_content: str) -> List[str]:
