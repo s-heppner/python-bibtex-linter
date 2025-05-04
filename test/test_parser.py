@@ -157,6 +157,31 @@ id456,
         expected = "\\url{https://example.org/query?x=1&y=2}"
         self.assertEqual(expected, actual)
 
+    def test_empty_field_value(self) -> None:
+        bibtex_string = """@misc{test_entry,
+          note = ,
+        }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("note")
+        expected = ""
+        self.assertEqual(expected, actual)
+
+        bibtex_string = """@misc{test_entry,
+                  note = {},
+                }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("note")
+        expected = ""
+        self.assertEqual(expected, actual)
+
+        bibtex_string = """@misc{test_entry,
+                  note = {{}},
+                }"""
+        entry = BibTeXEntry.from_string(bibtex_string)
+        actual = entry.fields.get("note")
+        expected = ""
+        self.assertEqual(expected, actual)
+
 
 class TestSplitEntries(unittest.TestCase):
     def test_single_entry(self) -> None:
