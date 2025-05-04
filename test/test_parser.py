@@ -2,7 +2,7 @@ import unittest
 import os
 from typing import Dict, List
 
-from bibtex_linter.parser import EntryType, BibTeXEntry, split_entries, parse_bibtex_file
+from bibtex_linter.parser import BibTeXEntry, split_entries, parse_bibtex_file
 
 
 class TestBibTeXEntry(unittest.TestCase):
@@ -245,15 +245,15 @@ class TestParseBibtexFile(unittest.TestCase):
         self.assertEqual(17, len(entries))
 
         expected_types = {
-            EntryType.ARTICLE: 1,
-            EntryType.CONFERENCE: 1,
-            EntryType.ONLINE: 1,
-            EntryType.TECH_REPORT: 1,
-            EntryType.BOOK: 1,
-            EntryType.MISC: 9,
-            EntryType.STANDARD: 1,
-            EntryType.IN_BOOK: 1,
-            EntryType.IN_COLLECTION: 1,
+            "article": 1,
+            "conference": 1,
+            "online": 1,
+            "techreport": 1,
+            "book": 1,
+            "misc": 9,
+            "standard": 1,
+            "inbook": 1,
+            "incollection": 1,
         }
 
         for entry_type, expected_count in expected_types.items():
@@ -262,9 +262,9 @@ class TestParseBibtexFile(unittest.TestCase):
                 self.assertEqual(expected_count, actual_count)
 
     def test_entry_fields_and_values(self) -> None:
-        expected_entries: List[Dict[str, EntryType | Dict[str, str]]] = [
+        expected_entries: List[Dict[str, str | Dict[str, str]]] = [
             {
-                "type": EntryType.ARTICLE,
+                "type": "article",
                 "fields": {
                     "author": "Tests basic article",
                     "title": "Standard field format",
@@ -272,7 +272,7 @@ class TestParseBibtexFile(unittest.TestCase):
                 }
             },
             {
-                "type": EntryType.CONFERENCE,
+                "type": "conference",
                 "fields": {
                     "author": "Should map to CONFERENCE",
                     "title": "Using alias INPROCEEDINGS",
@@ -280,21 +280,21 @@ class TestParseBibtexFile(unittest.TestCase):
                 }
             },
             {
-                "type": EntryType.ONLINE,
+                "type": "online",
                 "fields": {
                     "author": "Should map to ONLINE",
                     "url": "https://example.com"
                 }
             },
             {
-                "type": EntryType.TECH_REPORT,
+                "type": "techreport",
                 "fields": {
                     "author": "Should map to TECH_REPORT",
                     "title": "Tech report via alias"
                 }
             },
             {
-                "type": EntryType.BOOK,
+                "type": "book",
                 "fields": {
                     "author": "Extra spaces around field and value",
                     "title": "Trimmed Title",
@@ -302,73 +302,73 @@ class TestParseBibtexFile(unittest.TestCase):
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "note": "This has nested braces inside",
                     "comment": "But only outermost braces should be stripped"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "author": "Double brace test",
                     "title": "Another level of nesting"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "author": "Quoted Author",
                     "title": "Simple quoted title"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "note": "This value\nspans multiple\nlines"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "howpublished": r"\url{https://wrapped-url.com}"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "title": r"\LaTeX command in value"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "author": "Trailing Comma",
                     "title": "Should be OK"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "author": "No Trailing Comma"
                 }
             },
             {
-                "type": EntryType.MISC,
+                "type": "misc",
                 "fields": {
                     "author": "Newlines and spacing\neverywhere",
                     "title": "Still valid"
                 }
             },
             {
-                "type": EntryType.STANDARD,
+                "type": "standard",
                 "fields": {
                     "author": "Tests EntryType.STANDARD",
                     "title": "Formal standard ref"
                 }
             },
             {
-                "type": EntryType.IN_BOOK,
+                "type": "inbook",
                 "fields": {
                     "author": "Part of a book",
                     "title": "Chapter Title",
@@ -376,7 +376,7 @@ class TestParseBibtexFile(unittest.TestCase):
                 }
             },
             {
-                "type": EntryType.IN_COLLECTION,
+                "type": "incollection",
                 "fields": {
                     "author": "Self-contained part of a collection",
                     "title": "In Collection Title",

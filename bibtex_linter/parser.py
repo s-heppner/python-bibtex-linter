@@ -4,47 +4,10 @@ import enum
 import re
 
 
-class EntryType(enum.Enum):
-    """
-    A collection of entry types that the LaTeX `IEEEtran` offers. Note that these only include what I
-    need at the moment. The full list can be found at:
-    https://ctan.net/macros/latex/contrib/IEEEtran/bibtex/IEEEtran_bst_HOWTO.pdf
-    """
-    ARTICLE = "ARTICLE"  # A typical journal article
-    CONFERENCE = "CONFERENCE"  # A typical conference paper. Alias to: `IN_PROCEEDINGS`
-    ONLINE = "ONLINE"  # A reference on the internet. Alias to: `ELECTRONIC`
-    BOOK = "BOOK"  # Referencing a whole book
-    IN_BOOK = "IN_BOOK"  # Referencing a part of a book (chapters or pages)
-    IN_COLLECTION = "IN_COLLECTION"  # Referencing a part of a book that has its own name
-    STANDARD = "STANDARD"  # Used for proposed or formally published standards
-    TECH_REPORT = "TECH_REPORT"  # Used for technical reports, or reports about standards. Compare to `STANDARD`!
-    MISC = "MISC"  # Anything else that does not fit the above
-
-    @classmethod
-    def from_string(cls, s: str) -> 'EntryType':
-        """
-        Get the `EntryType` from the string. Can deal with common aliases.
-
-        :raises: KeyError, if the given string does not correspond to one of the entry types
-        """
-        s = s.upper()
-        str_to_entry_type_map: Dict[str, "EntryType"] = {
-            "ARTICLE": EntryType.ARTICLE,
-            "CONFERENCE": EntryType.CONFERENCE,
-            "INPROCEEDINGS": EntryType.CONFERENCE,
-
-            "BOOK": EntryType.BOOK,
-            "INBOOK": EntryType.IN_BOOK,
-            "INCOLLECTION": EntryType.IN_COLLECTION,
-            "STANDARD": EntryType.STANDARD,
-            "TECHREPORT": EntryType.TECH_REPORT,
-
-            "ONLINE": EntryType.ONLINE,
-            "ELECTRONIC": EntryType.ONLINE,
-
-            "MISC": EntryType.MISC,
-        }
-        return str_to_entry_type_map[s]
+RESOLVE_ENTRY_TYPE_ALIAS: Dict[str, str] = {
+    "inproceedings": "conference",
+    "electronic": "online",
+}
 
 
 @dataclasses.dataclass
@@ -52,7 +15,8 @@ class BibTeXEntry:
     """
     An entry in a BibTeX file
 
-    :ivar entry_type: Type of the entry (e.g. `@misc`). See `EntryType` for details
+    :ivar entry_type: Type of the entry (e.g. `@misc`). We always assume that the `entry_type` is in small letters only,
+        and we transform some common `entry_type` aliases to their "canonical" form (e.g. the name I prefer to use).
     :ivar name: Name or ID of the entry. So basically what is here: `@misc{Name_or_ID,`
     :ivar fields: Fields of the entry, as a Dict mapping the field key (e.g. `author`) to its cleaned up value.
 
@@ -72,14 +36,21 @@ class BibTeXEntry:
        will be parsed to: `{"note": "This value\nspans multiple\nlines"}`. For the implementation details, check out
        the `BibTeXEntry._parse_field_value` static method.
     """
-    entry_type: EntryType
+    entry_type: str
     name: str
     fields: Dict[str, str]
 
     @classmethod
     def from_string(cls, entry_string: str) -> "BibTeXEntry":
-        entry_type_string: str = entry_string.split("{")[0].lstrip("@")
-        entry_type = EntryType.from_string(entry_type_string)
+        """
+        Parse a `BibTeXEntry` from a string.
+        """
+        # First, we find and canonicalize the `entry_type`
+        entry_type_string: str = entry_string.split("{")[0].lstrip("@").lower()
+        if RESOLVE_ENTRY_TYPE_ALIAS.get(entry_type_string):
+            entry_type: str = RESOLVE_ENTRY_TYPE_ALIAS[entry_type_string]
+        else:
+            entry_type = entry_type_string
 
         name: str = entry_string.split("{")[1].split(",")[0]
         raw_fields = cls._split_fields(entry_string)
