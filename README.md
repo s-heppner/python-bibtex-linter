@@ -28,8 +28,10 @@ It is however relatively easy to define your own [custom ruleset](#advanced-cust
 ## How to use:
 First we need to install the tool, I recommend to use [pipx](https://github.com/pypa/pipx) for that:
 ```commandline
-pipx install .
+pipx install bibtex_linter
 ```
+
+You can find the package on PyPI [here](https://pypi.org/project/bibtex-linter/).
 
 ### Basic Usage
 Then you can call the script the following way:
@@ -45,23 +47,24 @@ The script will parse the file, perform the checks and print out the results.
 
 ### Advanced: Custom Rulesets
 
+It is also possible to define your own rules inside a Python file.
+
 > [!warning]
 > Custom rulesets are plain Python code and will be executed on your machine.
 > If you wouldn't trust running `python3 my_rules.py`, you shouldn't use it with `bibtex_linter`.
 > **Only use rulesets from sources you trust!**
 
-It is also possible to define your own rules inside a Python file. 
-Let's call it `my_own_rules.py`.
+Let's call our custom rule file `my_own_rules.py`.
 Creating your own rule is as simple as:
 
 ```Python
 from typing import List
 
-from bibtex_linter.parser import BibTeXEntry, EntryType
+from bibtex_linter.parser import BibTeXEntry
 from bibtex_linter.verification import linter_rule
 
 
-@linter_rule(entry_type=EntryType.ARTICLE)
+@linter_rule(entry_type="article")
 def check_article(entry: BibTeXEntry) -> List[str]:
     """
     Check that a `BibTeXEntry` has a nonempty `author` field.
@@ -78,10 +81,11 @@ As you can see, we created a method and designated that it is a linter rule by u
 The method needs to have a specific interface: 
 It needs to take the `BibTeXEntry` to be checked as input argument, and it needs to return a List of strings explaining
 the rule violations for that `BibTeXEntry`. 
-If there are no rule violations, it should return an empty list. 
+If there are no rule violations, it should return an empty list.
 
-This rule only gets executed for entries of the `ARTICLE` type, as specified by the decorator argument.
+This rule only gets executed for entries of the `article` type, as specified by the decorator argument.
 If we left the `entry_type` argument empty, this check would be executed on all entries.
+Read section [Entry Type](#entry-type) for some notes on how the `entry_type` is parsed to string.
 
 For more inspiration on what you could define as your custom rules, have a look into `bibtex_linter/default_rules.py`.
 After defining the rules in `my_own_rules.py`, we can execute them on a BibTeX file like this: 
@@ -130,3 +134,10 @@ The entry type specifies the available fields and is written behind the `@` and 
 @conference{...}
 @online{...}
 ```
+
+> [!note]
+> Our convention is to use small letter entry types.
+> This means, the [parser](bibtex_linter/parser.py) will automatically parse `@ARTICLE` to
+> `BibTeXEntry.entry_type = "article"`.
+> Furthermore, the parser converts some well-known aliases of `entry_types` into a standard form.
+> Check the `RESOLVE_ENTRY_TYPE_ALIAS` `Dict` in the [parser.py](bibtex_linter/parser.py).
