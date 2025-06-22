@@ -26,7 +26,6 @@ def check_article(entry: BibTeXEntry) -> List[str]:
     }
     omitted_fields: Set[str] = {
         "language",
-        "number",
         "url",
     }
     invariant_violations.extend(check_required_fields(entry, required_fields))
