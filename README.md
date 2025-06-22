@@ -49,8 +49,9 @@ The script will parse the file, perform the checks and print out the results.
 ### Defined Rulesets
 Currently, the following rulesets are shipped with the `bibtex_linter`:
 
-- `bibtex_linter path/to/refs.bib ieeetr` (default): Citation style of some IEEE conferences (needs `IEEEtran.cls`)
-- `bibtex_linter path/to/refs.bib IEEEtran`: LaTeX built-in IEEE citation style (via `\bibliographystyle{IEEEtran}`)
+- `bibtex_linter path/to/refs.bib ieeetr` (default): Citation style of some IEEE conferences (needs `IEEEtran.cls`).
+- `bibtex_linter path/to/refs.bib IEEEtran`: LaTeX built-in IEEE citation style (via `\bibliographystyle{IEEEtran}`).
+  Check out [this cheatsheet](docs/IEEEtran_best_practices.md) for documentation of the rules.
 
 If you want to define your own rules, see the next section on how to do this:
 
