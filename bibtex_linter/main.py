@@ -31,18 +31,25 @@ def main() -> None:
                         type=str,
                         nargs="?",
                         default=None,
-                        help="Path to the rules.py that define the rules. If left empty, the default ruleset is used. "
-                             "WARNING: Executes the Python code inside rules.py, so be sure that it's safe!")
+                        help="Name (ieeetr, IEEEtran) of or path to the rules.py that define the rules. "
+                             "If left empty, the default ruleset (ieeetr) is used. "
+                             "WARNING: Executes the Python code inside rules.py, so be sure that it's safe! "
+                             "See https://github.com/s-heppner/python-bibtex-linter for more information.")
 
     args = parser.parse_args()
 
     # Try to import the ruleset
     if args.ruleset is None:
-        import bibtex_linter.default_rules
+        import bibtex_linter.ieeetr_rules
         print("Using the default ruleset.")
     else:
         print(f"Importing rules from {args.ruleset}.")
-        import_from_path(args.ruleset)
+        if args.ruleset in ["default", "ieeetr"]:
+            import bibtex_linter.ieeetr_rules
+        elif args.ruleset == "IEEEtran":
+            import bibtex_linter.ieeetran_rules
+        else:
+            import_from_path(args.ruleset)
 
     entries: List[BibTeXEntry] = parse_bibtex_file(args.filepath)
     had_violations = False
