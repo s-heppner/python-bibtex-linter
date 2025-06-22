@@ -42,6 +42,17 @@ def check_required_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     return []
 
 
+def check_required_field(entry: BibTeXEntry, field: str, explanation: str) -> List[str]:
+    """
+    Helper function to check the existence of one field for the given entry.
+    If it does not exist, include the explanation sentence in the invariant violation text to help the user fill
+    out the required field.
+    """
+    if field not in entry.fields.keys():
+        return [f"Entry '{entry.name}' misses required field [{field}]. {explanation}"]
+    return []
+
+
 def check_omitted_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     """
     Helper function to check the existence of a set of omitted fields for the given entry.
@@ -52,6 +63,30 @@ def check_omitted_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     if omitted_fields_present:
         return [f"Entry '{entry.name}' has fields present that would be omitted in the compiled document: "
                 f"[{', '.join(sorted(omitted_fields_present))}]. This could lead to a loss of information."]
+    return []
+
+
+def check_disallowed_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
+    """
+    Helper function to check that no disallowed fields are existing in the given entry.
+    """
+    existing_fields: Set[str] = set(entry.fields.keys())
+    disallowed_fields_present = fields & existing_fields
+
+    if disallowed_fields_present:
+        return [f"Entry '{entry.name}' has fields present that would be omitted in the compiled document: "
+                f"[{', '.join(sorted(disallowed_fields_present))}]."]
+    return []
+
+
+def check_disallowed_field(entry: BibTeXEntry, field: str, explanation: str) -> List[str]:
+    """
+    Helper function to check the existence of a disallowed one field for the given entry.
+    If it does exist, include the explanation sentence in the invariant violation text to help the user understand
+    why it is disallowed.
+    """
+    if field not in entry.fields.keys():
+        return [f"Entry '{entry.name}' contains disallowed field [{field}]. {explanation}"]
     return []
 
 

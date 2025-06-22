@@ -20,8 +20,9 @@ As it turns out, a lot of different citation styles omit various fields, and it'
 Therefore, I created this tool (in Python, since that's what I know best), that can parse the entries and then performs
 arbitrary (self-defined) invariant checks on them.
 
-In my field the most used citation style is `IEEEtran` so this is how I've defined the default rules of the script.
-I've written down the observations on which the rules are based [here](test/test_template/IEEEtran_observations.md).
+In my field the most used citation style is `ieeetr` so this is how I've defined the default rules of the script.
+I've written down the observations on which the rules are based [here](test/test_template/IEEEtr_observations.md).
+These should not be confused with the LaTeX built-in `IEEEtran` citation style, for which I also developed rules.
 
 It is however relatively easy to define your own [custom ruleset](#advanced-custom-rulesets), should the need arise.
 
@@ -44,6 +45,14 @@ The script will parse the file, perform the checks and print out the results.
 > [!note]
 > As the `bibtex_linter` returns exit code `0`, if all checks have passed and `1`, if violations were found, 
 > you could also use it in the CI of your LaTeX projects. 
+
+### Defined Rulesets
+Currently, the following rulesets are shipped with the `bibtex_linter`:
+
+- `bibtex_linter path/to/refs.bib ieeetr` (default): Citation style of some IEEE conferences (needs `IEEEtran.cls`)
+- `bibtex_linter path/to/refs.bib IEEEtran`: LaTeX built-in IEEE citation style (via `\bibliographystyle{IEEEtran}`)
+
+If you want to define your own rules, see the next section on how to do this:
 
 ### Advanced: Custom Rulesets
 

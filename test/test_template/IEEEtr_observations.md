@@ -1,5 +1,18 @@
-## IEEE Citations
-Here's my observations on the different entry types with the standard `IEEEtran.cls` style template. 
+## IEEEtr Style
+Here's my observations on the different entry types with the standard `IEEEtran.cls` style template used in some
+IEEE conferences.
+
+> [!warning]
+> This is not to be confused with the built-in LaTeX `ieeetran` style
+
+This snippet used together with the `IEEEtran.cls` file to create the citations for the observations:
+
+```latex
+\bibliographystyle{ieeetr}
+\bibliography{maximal_example_refs.bib}
+\nocite{*}
+```
+
 You can find maximal examples (e.g. of all the available fields) [here](./test/test_template/maximal_example_refs.bib).
 This file can also be used to generate a test bibliography to check how entries are rendered with your citation style
 and template.
