@@ -85,7 +85,7 @@ def check_disallowed_field(entry: BibTeXEntry, field: str, explanation: str) -> 
     If it does exist, include the explanation sentence in the invariant violation text to help the user understand
     why it is disallowed.
     """
-    if field not in entry.fields.keys():
+    if field in entry.fields.keys():
         return [f"Entry '{entry.name}' contains disallowed field [{field}]. {explanation}"]
     return []
 
