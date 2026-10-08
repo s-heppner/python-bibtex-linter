@@ -14,32 +14,37 @@ from bibtex_linter.verification import (
 @linter_rule(entry_type=None)
 def check_url_field(entry: BibTeXEntry) -> List[str]:
     """
-    Check that the `url` field is not set.
-    Additionally, if the `note` field is set, check that it conforms to the following schema:
+    Check that the `url` and `doi` fields are not set, since `IEEEtran.bst` does not render them properly.
+    Additionally, if the `note` field is set, check that it conforms to one of the following schemas:
 
     ```
-    [ONLINE]. Available: \\url{...}, Accessed: YYYY-mmm-dd
+    [ONLINE]. Available: \\url{...}, Accessed: YYYY-MM-DD
+    doi: \\href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}
     ```
     Note, that the backslash had to be escaped here and is only meant to be a single one.
+    In the DOI form, the shown DOI must be the same as the DOI in the URL. Since a DOI is persistent, it has no
+    access date.
 
     :param entry: The BibTeXEntry
     :return: A list of string descriptions of rule violations for this entry.
     """
     invariant_violations: List[str] = []
-    if "url" in entry.fields.keys():
-        invariant_violations.append(
-            "Contains the non-allowed field: [url]. "
-            "Move the content of the field into the [note] field."
-        )
+    for field in ("url", "doi"):
+        if field in entry.fields.keys():
+            invariant_violations.append(
+                f"Contains the non-allowed field: [{field}]. "
+                "Move the content of the field into the [note] field."
+            )
     if "note" in entry.fields.keys():
         note_content: str = entry.fields["note"]
-        pattern = r"^\[ONLINE\]\. Available: \\url\{(.+?)\}, Accessed: (\d{4}-\d{2}-\d{2})$"
-        match = re.match(pattern, note_content)
-        if not match:
+        online_pattern = r"^\[ONLINE\]\. Available: \\url\{(.+?)\}, Accessed: (\d{4}-\d{2}-\d{2})$"
+        doi_pattern = r"^doi: \\href\{https://doi\.org/(10\.\d{4,9}/\S+)\}\{\1\}$"
+        if not (re.match(online_pattern, note_content) or re.match(doi_pattern, note_content)):
             invariant_violations.append(
                 "Contains a malformed field [note]. "
-                "Make sure the [note] field follows the following pattern: '[ONLINE]. Available: \\url{...}, "
-                "Accessed: YYYY-mmm-dd'"
+                "Make sure the [note] field follows one of the following patterns: "
+                "'[ONLINE]. Available: \\url{...}, Accessed: YYYY-MM-DD' or "
+                "'doi: \\href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}'"
             )
     return invariant_violations
 
