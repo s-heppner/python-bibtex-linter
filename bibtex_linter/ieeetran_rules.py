@@ -28,8 +28,8 @@ def check_url_field(entry: BibTeXEntry) -> List[str]:
     invariant_violations: List[str] = []
     if "url" in entry.fields.keys():
         invariant_violations.append(
-            f"Entry '{entry.name}' contains the non-allowed field: [url]. "
-            f"Move the content of the field into the [note] field."
+            "Contains the non-allowed field: [url]. "
+            "Move the content of the field into the [note] field."
         )
     if "note" in entry.fields.keys():
         note_content: str = entry.fields["note"]
@@ -37,7 +37,7 @@ def check_url_field(entry: BibTeXEntry) -> List[str]:
         match = re.match(pattern, note_content)
         if not match:
             invariant_violations.append(
-                f"Entry '{entry.name}' contains a malformed field [note]. "
+                "Contains a malformed field [note]. "
                 "Make sure the [note] field follows the following pattern: '[ONLINE]. Available: \\url{...}, "
                 "Accessed: YYYY-mmm-dd'"
             )
@@ -103,7 +103,7 @@ def check_conference(entry: BibTeXEntry) -> List[str]:
     ))
     if entry.fields.get("organization") == entry.fields.get("publisher"):
         invariant_violations.append(
-            f"Entry '{entry.name}' fields [organization] and [publisher] are the same. Remove field [organization]."
+            "Fields [organization] and [publisher] are the same. Remove field [organization]."
         )
     return invariant_violations
 
@@ -134,7 +134,7 @@ def check_online(entry: BibTeXEntry) -> List[str]:
     ))
     if entry.fields.get("organization") == entry.fields.get("author"):
         invariant_violations.append(
-            f"Entry '{entry.name}' fields [organization] and [author] are the same. Remove field [organization]."
+            "Fields [organization] and [author] are the same. Remove field [organization]."
         )
     return invariant_violations
 
@@ -160,7 +160,7 @@ def check_book(entry: BibTeXEntry) -> List[str]:
     ))
     if entry.fields.get("publisher") == entry.fields.get("editor"):
         invariant_violations.append(
-            f"Entry '{entry.name}' fields [publisher] and [editor] are the same. Remove field [editor]."
+            "Fields [publisher] and [editor] are the same. Remove field [editor]."
         )
     return invariant_violations
 
@@ -225,7 +225,7 @@ def check_in_collection(entry: BibTeXEntry) -> List[str]:
     ))
     if entry.fields.get("editor") == entry.fields.get("publisher"):
         invariant_violations.append(
-            f"Entry '{entry.name}' fields [editor] and [publisher] are the same. Remove field [editor]."
+            "Fields [editor] and [publisher] are the same. Remove field [editor]."
         )
     return invariant_violations
 
@@ -263,7 +263,7 @@ def check_standard(entry: BibTeXEntry) -> List[str]:
     ))
     if entry.fields.get("author") == entry.fields.get("organization"):
         invariant_violations.append(
-            f"Entry '{entry.name}' fields [author] and [organization] are the same. Remove field [author]."
+            "Fields [author] and [organization] are the same. Remove field [author]."
         )
     return invariant_violations
 
@@ -276,7 +276,7 @@ def check_tech_report(entry: BibTeXEntry) -> List[str]:
     :param entry: The BibTeXEntry
     :return: A list of string descriptions of rule violations for this entry.
     """
-    return [f"Entry '{entry.name}' is of type 'TECHREPORT'. Please use a different entry type, such as 'STANDARD'."]
+    return ["Is of type 'TECHREPORT'. Please use a different entry type, such as 'STANDARD'."]
 
 
 @linter_rule(entry_type="misc")

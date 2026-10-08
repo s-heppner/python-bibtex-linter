@@ -38,7 +38,7 @@ def check_required_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     existing_fields: Set[str] = set(entry.fields.keys())
     if not fields.issubset(entry.fields):
         missing = fields - existing_fields
-        return [f"Entry '{entry.name}' misses the following required fields: [{', '.join(sorted(missing))}]"]
+        return [f"Misses the following required fields: [{', '.join(sorted(missing))}]"]
     return []
 
 
@@ -49,7 +49,7 @@ def check_required_field(entry: BibTeXEntry, field: str, explanation: str) -> Li
     out the required field.
     """
     if field not in entry.fields.keys():
-        return [f"Entry '{entry.name}' misses required field [{field}]. {explanation}"]
+        return [f"Misses required field [{field}]. {explanation}"]
     return []
 
 
@@ -61,7 +61,7 @@ def check_omitted_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     omitted_fields_present = fields & existing_fields
 
     if omitted_fields_present:
-        return [f"Entry '{entry.name}' has fields present that would be omitted in the compiled document: "
+        return ["Has fields present that would be omitted in the compiled document: "
                 f"[{', '.join(sorted(omitted_fields_present))}]. This could lead to a loss of information."]
     return []
 
@@ -74,7 +74,7 @@ def check_disallowed_fields(entry: BibTeXEntry, fields: Set[str]) -> List[str]:
     disallowed_fields_present = fields & existing_fields
 
     if disallowed_fields_present:
-        return [f"Entry '{entry.name}' has fields present that would be omitted in the compiled document: "
+        return ["Has fields present that would be omitted in the compiled document: "
                 f"[{', '.join(sorted(disallowed_fields_present))}]."]
     return []
 
@@ -86,7 +86,7 @@ def check_disallowed_field(entry: BibTeXEntry, field: str, explanation: str) -> 
     why it is disallowed.
     """
     if field in entry.fields.keys():
-        return [f"Entry '{entry.name}' contains disallowed field [{field}]. {explanation}"]
+        return [f"Contains disallowed field [{field}]. {explanation}"]
     return []
 
 

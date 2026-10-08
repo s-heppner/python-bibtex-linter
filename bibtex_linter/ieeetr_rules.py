@@ -87,7 +87,7 @@ def check_online(entry: BibTeXEntry) -> List[str]:
         "url",
     }
     if "note" not in entry.fields.keys():
-        invariant_violations.append(f"Entry '{entry.name}' is of type 'online' and needs a field 'note' with the URL.")
+        invariant_violations.append("Is of type 'online' and needs a field 'note' with the URL.")
         # Todo: In the future, we could actually check that it contains an URL
     invariant_violations.extend(check_required_fields(entry, required_fields))
     invariant_violations.extend(check_omitted_fields(entry, omitted_fields))
@@ -145,8 +145,8 @@ def check_in_book(entry: BibTeXEntry) -> List[str]:
         "url",
     }
     if "chapter" not in entry.fields.keys() or "pages" not in entry.fields.keys():
-        invariant_violations.append(f"Entry {entry.name} needs to contain one of the "
-                                    f"following fields: [chapter, pages].")
+        invariant_violations.append("Needs to contain one of the "
+                                    "following fields: [chapter, pages].")
     invariant_violations.extend(check_required_fields(entry, required_fields))
     invariant_violations.extend(check_omitted_fields(entry, omitted_fields))
     return invariant_violations
@@ -233,9 +233,9 @@ def check_tech_report(entry: BibTeXEntry) -> List[str]:
         "url",
     }
     if "howpublished" in entry.fields.keys():
-        invariant_violations.append(f"Entry {entry.name} is of type 'techreport', which does not render field "
-                                    f"'howpublished'. Either use field 'institution' instead, or switch to a different "
-                                    f"entry type completely.")
+        invariant_violations.append("Is of type 'techreport', which does not render field "
+                                    "'howpublished'. Either use field 'institution' instead, or switch to a different "
+                                    "entry type completely.")
     invariant_violations.extend(check_required_fields(entry, required_fields))
     invariant_violations.extend(check_omitted_fields(entry, omitted_fields))
     return invariant_violations
