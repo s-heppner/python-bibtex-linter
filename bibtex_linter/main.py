@@ -61,9 +61,8 @@ def main() -> None:
         if violations:
             had_violations = True
             print(f"\nEntry '{entry.name}' of type '{entry.entry_type}' failed verification:")
-            print("  ❌ Invariant Violations:")
             for issue in violations:
-                print(f"    - {issue}")
+                print(f"  ❌ {issue}")
 
     print(f"\n\nFound {total_number_of_violations} invariant violation(s) in {len(entries)} entries.")
 

@@ -5,9 +5,8 @@ A Python tool to parse BibTeX entries and run (custom) checks on them.
 > bibtex_linter refs.bib
 
 Entry 'SomeBook' of type 'BOOK' failed verification:
-  ❌ Invariant Violations:
-    - Entry 'SomeBook' misses the following required fields: [publisher]
-    - Entry 'SomeBook' has fields present that would be omitted in the compiled document: [url]. This could lead to a loss of information.
+  ❌ Misses the following required fields: [publisher]
+  ❌ Has fields present that would be omitted in the compiled document: [url]. This could lead to a loss of information.
     
 Found 2 invariant violations in 17 entries.
 ```
@@ -83,7 +82,7 @@ def check_article(entry: BibTeXEntry) -> List[str]:
     :return: A list of string descriptions of rule violations for this entry.
     """
     if not entry.fields.get("author"):
-        return [f"Entry '{entry.name}' misses the required field author!"]
+        return ["Misses the required field [author]."]
     return []
 ```
 

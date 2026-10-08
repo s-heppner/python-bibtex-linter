@@ -22,7 +22,7 @@ class TestVerification(unittest.TestCase):
             name="missing_fields",
             fields={"author": "Jane"}
         )
-        expected = ["Entry 'missing_fields' misses the following required fields: [howpublished, title, year]"]
+        expected = ["Misses the following required fields: [howpublished, title, year]"]
         actual = check_required_fields(entry, {"author", "title", "howpublished", "year"})
         self.assertEqual(expected, actual)
 
@@ -41,7 +41,7 @@ class TestVerification(unittest.TestCase):
             fields={"author": "Jane", "language": "en", "url": "example.com"}
         )
         expected = [
-            "Entry 'omit_test' has fields present that would be omitted in the compiled document: "
+            "Has fields present that would be omitted in the compiled document: "
             "[language, url]. This could lead to a loss of information."
         ]
         actual = check_omitted_fields(entry, {"language", "organization", "address", "pages", "url"})
@@ -62,8 +62,8 @@ class TestVerification(unittest.TestCase):
             fields={"author": "Jane", "url": "http://example.org"}
         )
         expected = [
-            "Entry 'bad_entry' misses the following required fields: [howpublished, title, year]",
-            "Entry 'bad_entry' has fields present that would be omitted in the compiled document: [url]. "
+            "Misses the following required fields: [howpublished, title, year]",
+            "Has fields present that would be omitted in the compiled document: [url]. "
             "This could lead to a loss of information."
         ]
         actual = verify(entry)
