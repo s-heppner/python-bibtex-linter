@@ -31,9 +31,13 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule below
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
 
 ## Conference
 - Entry names: `@conference`, `@inproceedings`
@@ -58,9 +62,13 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
 - Disallowed fields:
   - `paper`: Seems to be not standard, so avoid using it
   - `url`: See special rule below
+  - `doi`: See special rule below
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
   - If both `organization` and `publisher` have the exact same value, only use `publisher`.
 
 ## Online
@@ -78,9 +86,13 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule below
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
   - If `organization` and `author` are the same, only use `author`
 
 ## Book
@@ -102,9 +114,13 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule below
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
   - If `editor` and `publisher` are the same, only use `publisher`.
 
 ## InBook
@@ -128,10 +144,14 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule below
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
   - `editor`: Field is not rendered
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
 
 ## InCollection
 - Entry name: `@incollection`
@@ -153,10 +173,14 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule below
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
   - `type`: Disallowed, since if it was set to (Article, Paper, etc.), we should use the proper entry type instead.)
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
   - If `editor` and `publisher` are the same, use `publisher`.
 
 ## Standard
@@ -176,9 +200,13 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule bewlo
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
   - If `author` and `organization` are the same, use `organization`
 
 > [!note]
@@ -200,9 +228,13 @@ This document is meant as a cheatsheet for how to set up your `refs.bib` file wh
   - `note`: See special rule below
 - Disallowed fields:
   - `url`: See special rule below
+  - `doi`: See special rule below
 - Special rules:
-  - `note` and `url` convention: Do not use `url`, rather format the `note` in the following pattern:
-    `[ONLINE]. Available: \url{...}, Accessed: YYYY-mmm-dd`
+  - `note`, `url` and `doi` convention: Do not use `url` or `doi`, rather format the `note` in one of the following
+    patterns:
+    - For links: `[ONLINE]. Available: \url{...}, Accessed: YYYY-MM-DD`
+    - For DOIs: `doi: \href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}` (no access date, the shown DOI must be the
+      same as the DOI in the URL)
 
 > [!note]
 > Try using the other entry types instead of this one, if possible.
