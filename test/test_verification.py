@@ -118,6 +118,38 @@ class TestIEEEtranUrlField(unittest.TestCase):
         )
         self.assertEqual([self.MALFORMED_NOTE], check_url_field(entry))
 
+    def test_doi_note_unescaped_underscore(self) -> None:
+        entry = BibTeXEntry(
+            entry_type="incollection",
+            name="doi_underscore",
+            fields={"note": "doi: \\href{https://doi.org/10.1007/11574620_45}{10.1007/11574620_45}"}
+        )
+        self.assertEqual([], check_url_field(entry))
+
+    def test_doi_note_escaped_special_characters(self) -> None:
+        for url_doi, shown_doi in (
+            ("10.1007/11574620_45", "10.1007/11574620\\_45"),
+            ("10.1007/978-3-642-25073-6_18", "10.1007/978-3-642-25073-6\\_18"),
+            ("10.1234/a#b%c&d$e", "10.1234/a\\#b\\%c\\&d\\$e"),
+            ("10.1234/a~b", "10.1234/a\\textasciitilde{}b"),
+            ("10.1234/a~b", "10.1234/a\\~{}b"),
+        ):
+            with self.subTest(shown_doi=shown_doi):
+                entry = BibTeXEntry(
+                    entry_type="incollection",
+                    name="doi_escaped",
+                    fields={"note": f"doi: \\href{{https://doi.org/{url_doi}}}{{{shown_doi}}}"}
+                )
+                self.assertEqual([], check_url_field(entry))
+
+    def test_doi_note_escaped_mismatching_doi(self) -> None:
+        entry = BibTeXEntry(
+            entry_type="incollection",
+            name="doi_escaped_mismatch",
+            fields={"note": "doi: \\href{https://doi.org/10.1007/11574620_45}{10.1007/11574620\\_46}"}
+        )
+        self.assertEqual([self.MALFORMED_NOTE], check_url_field(entry))
+
     def test_doi_note_with_access_date(self) -> None:
         entry = BibTeXEntry(
             entry_type="article",
