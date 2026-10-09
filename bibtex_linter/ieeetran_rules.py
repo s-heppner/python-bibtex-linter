@@ -11,6 +11,30 @@ from bibtex_linter.verification import (
 )
 
 
+# LaTeX escapes of special characters that can appear in a DOI, mapped to the character they represent
+_LATEX_ESCAPES = {
+    r"\textasciitilde{}": "~",
+    r"\textasciitilde": "~",
+    r"\~{}": "~",
+    r"\_": "_",
+    r"\#": "#",
+    r"\%": "%",
+    r"\&": "&",
+    r"\$": "$",
+}
+_LATEX_ESCAPE_PATTERN = re.compile("|".join(re.escape(escape) for escape in _LATEX_ESCAPES))
+
+
+def _unescape_latex(text: str) -> str:
+    """
+    Replace the LaTeX escapes of special characters (e.g. `\\_`) in the given text with the characters themselves.
+
+    :param text: The text to unescape
+    :return: The text with all escaped special characters unescaped
+    """
+    return _LATEX_ESCAPE_PATTERN.sub(lambda match: _LATEX_ESCAPES[match.group(0)], text)
+
+
 @linter_rule(entry_type=None)
 def check_url_field(entry: BibTeXEntry) -> List[str]:
     """
@@ -22,8 +46,9 @@ def check_url_field(entry: BibTeXEntry) -> List[str]:
     doi: \\href{https://doi.org/10.xxxx/yyy}{10.xxxx/yyy}
     ```
     Note, that the backslash had to be escaped here and is only meant to be a single one.
-    In the DOI form, the shown DOI must be the same as the DOI in the URL. Since a DOI is persistent, it has no
-    access date.
+    In the DOI form, the shown DOI must be the same as the DOI in the URL. Special characters in the shown DOI may be
+    escaped (e.g. `10.1007/11574620\\_45`), since the shown DOI is typeset as normal text. Since a DOI is persistent,
+    it has no access date.
 
     :param entry: The BibTeXEntry
     :return: A list of string descriptions of rule violations for this entry.
@@ -38,8 +63,10 @@ def check_url_field(entry: BibTeXEntry) -> List[str]:
     if "note" in entry.fields.keys():
         note_content: str = entry.fields["note"]
         online_pattern = r"^\[ONLINE\]\. Available: \\url\{(.+?)\}, Accessed: (\d{4}-\d{2}-\d{2})$"
-        doi_pattern = r"^doi: \\href\{https://doi\.org/(10\.\d{4,9}/\S+)\}\{\1\}$"
-        if not (re.match(online_pattern, note_content) or re.match(doi_pattern, note_content)):
+        doi_pattern = r"^doi: \\href\{https://doi\.org/(10\.\d{4,9}/\S+)\}\{(\S+)\}$"
+        doi_match = re.match(doi_pattern, note_content)
+        is_valid_doi = doi_match is not None and doi_match.group(1) == _unescape_latex(doi_match.group(2))
+        if not (re.match(online_pattern, note_content) or is_valid_doi):
             invariant_violations.append(
                 "Contains a malformed field [note]. "
                 "Make sure the [note] field follows one of the following patterns: "
